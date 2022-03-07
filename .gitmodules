@@ -1,0 +1,12 @@
+[submodule "DasherCore"]
+	path = DasherCore
+	url = https://github.com/VRGroupRWTH/DasherCore
+[submodule "Thirdparty/websocketpp"]
+	path = Thirdparty/websocketpp
+	url = https://github.com/zaphoyd/websocketpp.git
+[submodule "Thirdparty/asio"]
+	path = Thirdparty/asio
+	url = https://github.com/chriskohlhoff/asio
+[submodule "Thirdparty/rapidjson"]
+	path = Thirdparty/rapidjson
+	url = https://github.com/Tencent/rapidjson.git
