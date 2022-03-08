@@ -4,12 +4,12 @@ project("DasherServer")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-add_compile_definitions(ASIO_STANDALONE _WEBSOCKETPP_CPP11_STRICT_)
+add_compile_definitions(ASIO_STANDALONE _WEBSOCKETPP_CPP11_STRICT_ HAVE_ROUND XML_STATIC)
 set(CMAKE_SUPPRESS_REGENERATION true)
 
 # Apparently wrongly assigned in asio
 IF(WIN32)
-	add_compile_definitions(HAVE_ROUND XML_STATIC _SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING)
+	add_compile_definitions(_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING)
 ENDIF()
 
 ###############################
