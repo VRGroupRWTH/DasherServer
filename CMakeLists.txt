@@ -6,6 +6,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_definitions(ASIO_STANDALONE _WEBSOCKETPP_CPP11_STRICT_ HAVE_ROUND XML_STATIC)
 set(CMAKE_SUPPRESS_REGENERATION true)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+link_libraries(stdc++fs) #needed for std::filesystem with clang
+
+
 
 # Apparently wrongly assigned in asio
 IF(WIN32)
@@ -51,4 +56,4 @@ target_include_directories(DasherServer PRIVATE ${PROJECT_SOURCE_DIR}/Thirdparty
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT DasherServer)
 
 add_dependencies(DasherServer DasherCore)
-target_link_libraries(DasherServer DasherCore)
+target_link_libraries(DasherServer PRIVATE  DasherCore Threads::Threads)

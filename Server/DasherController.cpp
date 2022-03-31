@@ -1,6 +1,6 @@
 #include "DasherController.h"
 
-DasherController::DasherController(Dasher::CSettingsStore* pSettingsStore, CFileUtils* fileUtils, std::shared_ptr<WebsocketServer> server, websocketpp::connection_hdl connection): CDashIntfScreenMsgs(pSettingsStore, fileUtils),
+DasherController::DasherController(Dasher::CSettingsStore* pSettingsStore, std::shared_ptr<WebsocketServer> server, websocketpp::connection_hdl connection): CDashIntfScreenMsgs(pSettingsStore),
                                                                                                                                                                                     Server(server),
                                                                                                                                                                                     Connection(connection)
 {
@@ -133,7 +133,7 @@ DasherController::~DasherController()
 
 void DasherController::Tick()
 {
-	const std::chrono::time_point<chrono::steady_clock> startTime = std::chrono::high_resolution_clock::now();
+	const std::chrono::time_point<chrono::high_resolution_clock> startTime = std::chrono::high_resolution_clock::now();
 	while (bRunTickThread) {
 		NewFrame(static_cast<unsigned long>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - startTime).count()), true);
 		std::this_thread::sleep_for(2ms);

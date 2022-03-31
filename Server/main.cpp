@@ -15,20 +15,19 @@
 
 std::shared_ptr<WebsocketServer> DasherServer;
 Connection_Map Connections;
-static Dasher::FileUtils FileUtils;
 static Dasher::CommandlineErrorDisplay ErrorDisplay;
 
 int main()
 {
 	DasherServer = make_shared<WebsocketServer>();
 		
-	Dasher::XmlSettingsStore* Settings = new Dasher::XmlSettingsStore("Settings.xml", &FileUtils, &ErrorDisplay); //Gets deleted somewhere else
+	Dasher::XmlSettingsStore* Settings = new Dasher::XmlSettingsStore("Settings.xml",  &ErrorDisplay); //Gets deleted somewhere else
 	Settings->Load();
 	Settings->Save();
 
 	DasherServer->set_open_handler([Settings](const websocketpp::connection_hdl& Connection)
 	{
-		shared_ptr<DasherController> Controller = make_shared<DasherController>(Settings, &FileUtils, DasherServer, Connection);
+		shared_ptr<DasherController> Controller = make_shared<DasherController>(Settings,  DasherServer, Connection);
 
 		Controller->Initialize();
 
@@ -86,7 +85,7 @@ int main()
 	DasherServer->set_error_channels(websocketpp::log::elevel::all);
 
 	DasherServer->init_asio();
-	DasherServer->listen(9002);
+	DasherServer->listen(9007);
 	DasherServer->start_accept();
 	   
 	DasherServer->run();

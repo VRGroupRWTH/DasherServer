@@ -9,7 +9,7 @@
 class DasherController : public Dasher::CDashIntfScreenMsgs
 {
 public:
-	DasherController(Dasher::CSettingsStore* pSettingsStore, CFileUtils* fileUtils, std::shared_ptr<WebsocketServer> server, websocketpp::connection_hdl connection);
+	DasherController(Dasher::CSettingsStore* pSettingsStore, std::shared_ptr<WebsocketServer> server, websocketpp::connection_hdl connection);
 
 	void editOutput(const std::string& strText, Dasher::CDasherNode* pNode) override;
 	void editDelete(const std::string& strText, Dasher::CDasherNode* pNode) override;
