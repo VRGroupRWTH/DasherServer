@@ -22,7 +22,7 @@ public:
 	void Polygon(point* Points, int Number, int fillColour, int outlineColour, int lineWidth) override;
 	void Display() override;
 	void SetColourScheme(const Dasher::CColourIO::ColourInfo* pColourScheme) override;
-	bool IsWindowUnderCursor() override;
+	bool IsPointVisible(Dasher::screenint x, Dasher::screenint y);
 	void SendCurrentColorScheme();
 
 	bool MultiSizeFonts() override { return true; }

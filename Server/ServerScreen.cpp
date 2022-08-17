@@ -154,8 +154,7 @@ void ServerScreen::SetColourScheme(const Dasher::CColourIO::ColourInfo* pColourS
 	ServerInstance->send(Connection, Buffer.GetString(), Buffer.GetSize(), websocketpp::frame::opcode::TEXT);
 }
 
-bool ServerScreen::IsWindowUnderCursor()
-{
+bool ServerScreen::IsPointVisible(Dasher::screenint, Dasher::screenint){
 	return true;
 }
 

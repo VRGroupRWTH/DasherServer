@@ -8,14 +8,12 @@ add_compile_definitions(ASIO_STANDALONE _WEBSOCKETPP_CPP11_STRICT_ HAVE_ROUND XM
 set(CMAKE_SUPPRESS_REGENERATION true)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
-link_libraries(stdc++fs) #needed for std::filesystem with clang
 
-
-
-# Apparently wrongly assigned in asio
-IF(WIN32)
-	add_compile_definitions(_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING)
-ENDIF()
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	link_libraries(c++fs) #needed for std::filesystem with clang
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	link_libraries(stdc++fs) #needed for std::filesystem with gcc
+endif()
 
 ###############################
 # Building Dasher Library
@@ -27,6 +25,11 @@ add_subdirectory("DasherCore")
 ###############################
 # Dasher Server
 ###############################
+
+IF(WIN32)
+	add_compile_definitions(_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING) # Apparently wrongly assigned in asio
+	add_compile_definitions(WIN32_LEAN_AND_MEAN) # Apparently wrongly assigned in asio
+ENDIF()
 
 ADD_Executable(DasherServer
 	${PROJECT_SOURCE_DIR}/Server/main.cpp
