@@ -9,12 +9,6 @@ set(CMAKE_SUPPRESS_REGENERATION true)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	link_libraries(c++fs) #needed for std::filesystem with clang
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	link_libraries(stdc++fs) #needed for std::filesystem with gcc
-endif()
-
 ###############################
 # Building Dasher Library
 ###############################
