@@ -108,7 +108,10 @@ void ServerScreen::Display()
 	Writer.EndObject();
 
 	//Send "Frame" to Client
-	ServerInstance->send(Connection, Buffer.GetString(), Buffer.GetSize(), websocketpp::frame::opcode::TEXT);
+	if(ServerInstance->get_con_from_hdl(Connection)->get_state() == websocketpp::session::state::open)
+	{
+		ServerInstance->send(Connection, Buffer.GetString(), Buffer.GetSize(), websocketpp::frame::opcode::TEXT);
+	}
 
 	//Empty buffers
 	StringsToDraw.clear();
@@ -140,18 +143,20 @@ void ServerScreen::SetColourScheme(const Dasher::CColourIO::ColourInfo* pColourS
 		Writer.String(pColorScheme->ColourID.c_str(), static_cast<rapidjson::SizeType>(pColorScheme->ColourID.length()));
 		Writer.Key("C");
 		Writer.StartArray();
-			for (int i = 0; i < pColorScheme->Reds.size(); i++)
+			for (int i = 0; i < pColorScheme->Colors.size(); i++)
 			{
 				Writer.StartArray();
-					Writer.Int(pColorScheme->Reds[i]);
-					Writer.Int(pColorScheme->Greens[i]);
-					Writer.Int(pColorScheme->Blues[i]);
+					Writer.Int(pColorScheme->Colors[i].Red);
+					Writer.Int(pColorScheme->Colors[i].Green);
+					Writer.Int(pColorScheme->Colors[i].Blue);
 				Writer.EndArray();
 			}
 		Writer.EndArray();
 	Writer.EndObject();
 
-	ServerInstance->send(Connection, Buffer.GetString(), Buffer.GetSize(), websocketpp::frame::opcode::TEXT);
+	if(ServerInstance->get_con_from_hdl(Connection)->get_state() == websocketpp::session::state::open){
+		ServerInstance->send(Connection, Buffer.GetString(), Buffer.GetSize(), websocketpp::frame::opcode::TEXT);
+	}
 }
 
 bool ServerScreen::IsPointVisible(Dasher::screenint, Dasher::screenint){

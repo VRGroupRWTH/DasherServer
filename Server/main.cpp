@@ -1,17 +1,13 @@
-#include "Declarations.h"
-#include <expat.h>
-#include <iostream>
-#include <chrono>
 #include <thread>
+#include "Declarations.h"
 
 #include "rapidjson/document.h"
-#include "rapidjson/writer.h"
 
 #include <XmlSettingsStore.h>
 
 #include "DasherController.h"
-#include "ParameterDefinitions.h"
 #include "FileUtils.h"
+#include "ParameterDefinitions.h"
 
 std::shared_ptr<WebsocketServer> DasherServer;
 Connection_Map Connections;
