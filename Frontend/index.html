@@ -166,99 +166,93 @@
 				const canvas = document.getElementById('canvas');
 				var ctx = canvas.getContext("2d");
 				
-				//draw rectangles
-				for(const Rect of Data.R){
-					if(Rect.C >= 0){
-						const color = colorMap.C[Rect.C];
-						ctx.fillStyle = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
-						ctx.fillRect(Rect.X1, Rect.Y1, Rect.X2 - Rect.X1, Rect.Y2 - Rect.Y1);					
-					}
+				for(const Geometry of Data.G){
+					// select the geometry type
+					switch(Geometry.G){
+						case "R": // rectangle
+							if(Geometry.C >= 0){
+								var color = colorMap.C[Geometry.C];
+								ctx.fillStyle = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
+								ctx.fillRect(Geometry.X1, Geometry.Y1, Geometry.X2 - Geometry.X1, Geometry.Y2 - Geometry.Y1);					
+							}
+							
+							if(typeof Geometry.O != "undefined" && typeof Geometry.T != "undefined"){
+								const outline = colorMap.C[Geometry.O];
+								ctx.lineWidth = Geometry.T;
+								ctx.strokeStyle = "rgb(" + outline[0] + "," + outline[1] + "," + outline[2] + ")";
+								ctx.strokeRect(Geometry.X1, Geometry.Y1, Geometry.X2 - Geometry.X1, Geometry.Y2 - Geometry.Y1);											
+							}
+							break;
+						case "L": // (poly-)line
+							var color = colorMap.C[Geometry.C];
+							ctx.lineWidth = Geometry.W;
+							ctx.strokeStyle = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
+							
+							ctx.beginPath();
+							for(var i = 0; i < Geometry.P.length; i++){
+								if(i == 0){
+									ctx.moveTo(Geometry.P[i][0], Geometry.P[i][1]);
+								}else{
+									ctx.lineTo(Geometry.P[i][0], Geometry.P[i][1]);
+								}
+							}
+							ctx.closePath();
+							ctx.stroke();
+							break;
+						case "S": // text
+							var color = colorMap.C[Geometry.C];
 					
-					if(typeof Rect.O != "undefined" && typeof Rect.T != "undefined"){
-						const outline = colorMap.C[Rect.O];
-						ctx.lineWidth = Rect.T;
-						ctx.strokeStyle = "rgb(" + outline[0] + "," + outline[1] + "," + outline[2] + ")";
-						ctx.strokeRect(Rect.X1, Rect.Y1, Rect.X2 - Rect.X1, Rect.Y2 - Rect.Y1);											
-					}
-				}
-				
-				//draw polylines
-				for(const Line of Data.L){
-					const color = colorMap.C[Line.C];
-					
-					ctx.lineWidth = Line.W;
-					ctx.strokeStyle = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
-					
-					ctx.beginPath();
-					for(var i = 0; i < Line.P.length; i++){
-						if(i == 0){
-							ctx.moveTo(Line.P[i][0], Line.P[i][1]);
-						}else{
-							ctx.lineTo(Line.P[i][0], Line.P[i][1]);
-						}
-					}
-					ctx.closePath();
-					ctx.stroke();
-				}
-				
-				//draw text
-				for(const Text of Data.S){
-					const color = colorMap.C[Text.C];
-					
-					ctx.textBaseline = "top"; 
-					ctx.fillStyle = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
-					ctx.font = Text.F + "px serif";
-					ctx.fillText(Text.L.S, Text.X, Text.Y);
-				}
-				
-				//draw circles
-				for(const Circle of Data.C){
-					ctx.beginPath();
-					ctx.arc(Circle.X, Circle.Y, Circle.R, 0, 2 * Math.PI);
-					ctx.closePath();
-					
-					if(Circle.F >= 0){
-						const color = colorMap.C[Circle.F];
-						ctx.fillStyle = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
-						ctx.fill();
-					}
-					
-					if(typeof Circle.L != "undefined" && typeof Circle.W != "undefined"){
-						const outline = colorMap.C[Circle.L];
-						ctx.lineWidth = Circle.W;
-						ctx.strokeStyle = "rgb(" + outline[0] + "," + outline[1] + "," + outline[2] + ")";
-						ctx.stroke();
-					}
-				}
-				
-				//draw polygons
-				for(const Polygons of Data.P){
-					const HasOutline = (typeof Polygons.O != "undefined" && typeof Polygons.W != "undefined");
+							ctx.textBaseline = "top"; 
+							ctx.fillStyle = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
+							ctx.font = Geometry.F + "px serif";
+							ctx.fillText(Geometry.L.S, Geometry.X, Geometry.Y);
+							break;
+						case "C": // circle
+							ctx.beginPath();
+							ctx.arc(Geometry.X, Geometry.Y, Geometry.R, 0, 2 * Math.PI);
+							ctx.closePath();
+							
+							if(Geometry.F >= 0){
+								var color = colorMap.C[Geometry.F];
+								ctx.fillStyle = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
+								ctx.fill();
+							}
+							
+							if(typeof Geometry.L != "undefined" && typeof Geometry.W != "undefined"){
+								const outline = colorMap.C[Geometry.L];
+								ctx.lineWidth = Geometry.W;
+								ctx.strokeStyle = "rgb(" + outline[0] + "," + outline[1] + "," + outline[2] + ")";
+								ctx.stroke();
+							}
+							break;
+						case "P": // polygon
+							const HasOutline = (typeof Geometry.O != "undefined" && typeof Geometry.W != "undefined");
 										
-					ctx.beginPath();
-					for(var i = 0; i < Polygons.P.length; i++){
-						if(!HasOutline || i == 0){
-							ctx.moveTo(Polygons.P[i][0], Polygons.P[i][1]);
-						}else{
-							ctx.lineTo(Polygons.P[i][0], Polygons.P[i][1]);
-						}
-					}
-					ctx.closePath();
-								
-					if(Polygons.F >= 0){
-						const color = colorMap.C[Polygons.F];
-						ctx.fillStyle = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
-						ctx.fill(); 
-					}
-					
-					if(HasOutline){
-						const outline = colorMap.C[Polygons.O];
-						ctx.lineWidth = Polygons.W;
-						ctx.strokeStyle = "rgb(" + outline[0] + "," + outline[1] + "," + outline[2] + ")";
-						ctx.stroke();
+							ctx.beginPath();
+							for(var i = 0; i < Geometry.P.length; i++){
+								if(i == 0){
+									ctx.moveTo(Geometry.P[i][0], Geometry.P[i][1]);
+								}else{
+									ctx.lineTo(Geometry.P[i][0], Geometry.P[i][1]);
+								}
+							}
+							ctx.closePath();
+										
+							if(Geometry.F >= 0){
+								var color = colorMap.C[Geometry.F];
+								ctx.fillStyle = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
+								ctx.fill(); 
+							}
+							
+							if(HasOutline){
+								const outline = colorMap.C[Geometry.O];
+								ctx.lineWidth = Geometry.W;
+								ctx.strokeStyle = "rgb(" + outline[0] + "," + outline[1] + "," + outline[2] + ")";
+								ctx.stroke();
+							}
+							break;
 					}
 				}
-				
 			}
 			
 			function OnBuffer(Data){

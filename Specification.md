@@ -5,23 +5,20 @@ This frame is sent by the server to tell the client what to draw on the canvas
 ```js
 	 {
         "T" : "F",
-        "S" : [{<StringToDraw_0>},...,],
-        "R" : [{<RectangleToDraw_0>},...,],
-        "C" : [{<CircleToDraw_0>},...,],
-        "L" : [{<PolylineToDraw_0>},...,],
-        "P" : [{<PolygonToDraw_0>},...,],
-	 }	
+        "G" : [{<Geometry_0>},...,],
 ```
+
+where `{<Geometry_0>}` references one of the below types
+
 ### The compontens:
 
 #### StringToDraw
 
-    "S" : [{<StringToDraw_0>},...,],
-
-String to be drawn on the canvas. `{<StringToDraw>}` serialized as follows:
+String to be drawn on the canvas. `<StringToDraw>` serialized as follows:
 
 ```js
     {
+		"G" : "S",
         "L" : {
             "S" : "<Label->m_strText>",
             "W" : <Label->m_iWrapSize>
@@ -47,11 +44,10 @@ where:
 `<iColor>`              text color that should be drawn as in integer index to a color map.
 
 #### RectangleToDraw
-	 "R" : [{<RectangleToDraw_0>},...,],
-
-Rectangle to be drawn on the canvas. `{<RectangleToDraw>}` serialized as follows:
+Rectangle to be drawn on the canvas. `<RectangleToDraw>` serialized as follows:
 ```js
 	{
+		"G" : "R",
         "X1" : <X1>,
         "Y1" : <Y1>,
         "X2" : <X2>,
@@ -70,12 +66,11 @@ The follwing are **optional**, assume no outline if not present in the frame:
 `<iThickness>`    outline thickness (integer)
 
 #### CircleToDraw
-	 "C" : [{<CircleToDraw_0>},...,],
-
 Circle to be drawn on the canvas. `{<CircleToDraw>}` serialized as follows:
 
 ```js
 	{
+		"G" : "C",
         "X" : <iCX>,
         "Y" : <iCY>,
         "R" : <iR>,
@@ -93,12 +88,11 @@ The follwing are **optional**, assume no outline if not present in the frame:
 `<iLineWidth>`      outline thickness (integer)
 
 #### PolylineToDraw
-        "L" : [{<PolylineToDraw_0>},...,],        
-
-Polyline to be drawn on the canvas. `{<PolylineToDraw>}` serialized as follows:
+Polyline to be drawn on the canvas. `<PolylineToDraw>` serialized as follows:
 
 ```js
 	{
+		"G" : "L",
         "P" : [[<X_0>,<Y_0>],...,[<X_Number>,<Y_Number>]],
         "W" : <iWidth>,
         "C" : <iColor>
@@ -112,12 +106,12 @@ Polyline to be drawn on the canvas. `{<PolylineToDraw>}` serialized as follows:
 
 
 #### PolygonToDraw
-        "P" : [{<PolygonToDraw_0>},...,],
 
-Polygon to be drawn on the canvas. `{<PolygonToDraw>}` serialized as follows:
+Polygon to be drawn on the canvas. `<PolygonToDraw>` serialized as follows:
 
 ```js
 	{
+		"G" : "P",
 	 	"P" : [[<X_0>,<Y_0>],...,[<X_Number>,<Y_Number>]],
 	 	"F" : <iFillColor>,
 	 	"O" : <iOutlineColor>,      //assume 0 if not sent
