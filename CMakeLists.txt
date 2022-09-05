@@ -38,6 +38,8 @@ ADD_Executable(DasherServer
 	${PROJECT_SOURCE_DIR}/Server/ServerScreen.h
 	${PROJECT_SOURCE_DIR}/Server/ServerFontMeasure.h
 	${PROJECT_SOURCE_DIR}/Server/ServerFontMeasure.cpp
+	${PROJECT_SOURCE_DIR}/Server/XmlServerStore.h
+	${PROJECT_SOURCE_DIR}/Server/XmlServerStore.cpp
 )
 
 # Copy Data files

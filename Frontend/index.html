@@ -4,7 +4,6 @@
 		<meta charset="UTF-8">
 		<title>DasherServer Frontend</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-		
 		<style>
 			body {
 				display: flex;
@@ -58,10 +57,27 @@
 			#menu * {
 				margin-left: 5px;
 			}
+			
+			#settingsContainer {
+				position: absolute;
+				bottom: 10px;
+				right: 10px;
+			}
+			
+			#settingsContainer > div > ul {
+				max-height: 80vh;
+				overflow-y: scroll;
+			}
 		</style>
 		
 		<script>
+			var options = {};
+			
 			$(document).ready(function() {
+				window.gui = new dat.GUI({name: 'Dasher Settings', autoPlace: false, closeOnTop: true});
+				dat.GUI.TEXT_OPEN = "Open Settings";
+				dat.GUI.TEXT_CLOSED = "Close Settings";
+				
 				$(window).resize(function(){
 					const canvas = document.getElementById('canvas');
 					canvas.width = $("#canvas-wrapper").width();
@@ -138,10 +154,10 @@
 						$("#connectButton").val("Disconnect");
 						SendScreenSize($("#canvas-wrapper").width(), $("#canvas-wrapper").height());
 
-						SendParameter("BP_AUTO_SPEEDCONTROL", false);  		//Auto Speed Control
-						SendParameter("LP_DASHER_FONTSIZE", 18);
-						SendParameter("LP_MAX_BITRATE", 400);				//Maximum Speed
-						SendParameter("SP_INPUT_FILTER", "Stylus Control");	//On Hold
+						SendParameter("AutoSpeedControl", false);  		//Auto Speed Control
+						SendParameter("DasherFontSize", 18);
+						SendParameter("MaxBitRateTimes100", 400);		//Maximum Speed
+						SendParameter("InputFilter", "Stylus Control");	//On Hold
 					};
 					
 					webSocket.onerror = function (error) {
@@ -312,6 +328,34 @@
 				webSocket.send(JSON.stringify(Result));
 			}
 			
+			function OnParameterListReceived(Data){
+				var boolParams = gui.addFolder('Boolean Parameters');
+				for(const Bools of Data.Bool){
+					options[Bools["Name"]] = Bools["Value"];
+					boolParams.add(options, Bools["Name"]).onFinishChange((val) => {
+						SendParameter(Bools["Name"], val);
+					});
+				}
+				
+				var stringParams = gui.addFolder('String Parameters');
+				for(const Strings of Data.String){
+					options[Strings["Name"]] = Strings["Value"];
+					stringParams.add(options, Strings["Name"]).onFinishChange((val) => {
+						SendParameter(Strings["Name"], val);
+					});
+				}
+				
+				var longParams = gui.addFolder('Long Parameters');
+				for(const Longs of Data.Long){
+					options[Longs["Name"]] = Longs["Value"];
+					longParams.add(options, Longs["Name"]).onFinishChange((val) => {
+						SendParameter(Longs["Name"], Math.trunc(val));
+					}).step(1);
+				}
+				document.getElementById("settingsContainer").appendChild(gui.domElement);
+				gui.close();
+			}
+			
 			function OnMessage(Msg){
 				const data = JSON.parse(Msg.data);
 				switch(data.T){
@@ -327,11 +371,15 @@
 					case "A":
 						OnRequestAlphabetSizes(data);
 						break;
+					case "P":
+						OnParameterListReceived(data);
+						break;
 				}
 			}
 		</script>
 	</head>
 	<body>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
 		<div id="menu">
 			<input type="text" id="ipAddr" value="127.0.0.1" placeholder="127.0.0.1" size="16">
 			<span>:</span>
@@ -344,5 +392,6 @@
 		<div id="canvas-wrapper">
 			<canvas id="canvas" width="200" height="100"></canvas>
 		</div>
+		<div id="settingsContainer"></div>
 	</body>
 </html>

@@ -231,5 +231,25 @@ Sent by the client to set options in Dasher
         "V": <Parameter_Value>
     }
 ```
-`<Parameter_Name>` string, defines which parameter is set (see ParameterDefinitions.h for possible values)
+`<Parameter_Name>` string, defines which parameter is set (see DasherCore's Parameters.h for possible values)
 `<Parameter_Value>` either String/Bool/Long, defines the value of this parameter
+
+## Get Parameters Definitions from DasherServer
+Sent automatically by the server to show which parameters are available
+```js
+	{
+		"T": "P",
+		"Bool" : [
+			{"Name" : <Param Name>, "Default" : <Param Default>, "Description" : <Param Description>, "Value" : <Current Param Value>},
+			...
+		],
+		"String" : [
+			{"Name" : <Param Name>, "Default" : <Param Default>, "Description" : <Param Description>, "Value" : <Current Param Value>},
+			...
+		],
+		"Long" : [
+			{"Name" : <Param Name>, "Default" : <Param Default>, "Description" : <Param Description>, "Value" : <Current Param Value>},
+			...
+		]
+	}
+```

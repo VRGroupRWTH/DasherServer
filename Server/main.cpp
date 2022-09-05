@@ -10,8 +10,8 @@
 #include <XmlSettingsStore.h>
 
 #include "DasherController.h"
-#include "ParameterDefinitions.h"
 #include "FileUtils.h"
+#include "XmlServerStore.h"
 
 std::shared_ptr<WebsocketServer> DasherServer;
 Connection_Map Connections;
@@ -21,7 +21,7 @@ int main()
 {
 	DasherServer = make_shared<WebsocketServer>();
 		
-	Dasher::XmlSettingsStore* Settings = new Dasher::XmlSettingsStore("Settings.xml",  &ErrorDisplay); //Gets deleted somewhere else
+	XmlServerStore* Settings = new XmlServerStore("Settings.xml",  &ErrorDisplay); //Gets deleted somewhere else
 	Settings->Load();
 	Settings->Save();
 
@@ -30,6 +30,7 @@ int main()
 		shared_ptr<DasherController> Controller = make_shared<DasherController>(Settings,  DasherServer, Connection);
 
 		Controller->Initialize();
+		Settings->SendParameterListToClient(DasherServer, Connection);
 
 		Connections[Connection] = std::move(Controller);
 	});
@@ -39,7 +40,7 @@ int main()
 		Connections.erase(Connection);
 	});
 
-	DasherServer->set_message_handler([](websocketpp::connection_hdl Connection, WebsocketServer::message_ptr Msg)
+	DasherServer->set_message_handler([Settings](websocketpp::connection_hdl Connection, WebsocketServer::message_ptr Msg)
 	{
 		rapidjson::Document Doc;
 		Doc.Parse(Msg->get_raw_payload().c_str());
@@ -65,19 +66,7 @@ int main()
 		if (Type == "P" && Doc.HasMember("N") && Doc.HasMember("V"))
 		{
 			const std::string ParameterName = Doc["N"].GetString();
-			if(Dasher::ParameterEnumMap.count(ParameterName) < 1) return;
-
-			const int Parameter = Dasher::ParameterEnumMap[ParameterName];
-			if(ParameterName[0] == 'B' && Doc["V"].IsBool())
-			{
-				Connections[Connection]->SetBoolParameter(Parameter, Doc["V"].GetBool());
-			}else if(ParameterName[0] == 'S' && Doc["V"].IsString())
-			{
-				Connections[Connection]->SetStringParameter(Parameter, Doc["V"].GetString());
-			}else if(ParameterName[0] == 'L' && Doc["V"].IsInt64())
-			{
-				Connections[Connection]->SetLongParameter(Parameter, static_cast<long>(Doc["V"].GetInt64()));
-			}
+			Settings->SetParameterBasedOnRequest(ParameterName, Doc["V"]);
 		}
 	});
 
