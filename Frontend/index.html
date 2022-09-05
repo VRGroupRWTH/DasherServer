@@ -334,7 +334,7 @@
 					options[Bools["Name"]] = Bools["Value"];
 					boolParams.add(options, Bools["Name"]).onFinishChange((val) => {
 						SendParameter(Bools["Name"], val);
-					});
+					}).__li.title = Bools["Description"];
 				}
 				
 				var stringParams = gui.addFolder('String Parameters');
@@ -342,7 +342,7 @@
 					options[Strings["Name"]] = Strings["Value"];
 					stringParams.add(options, Strings["Name"]).onFinishChange((val) => {
 						SendParameter(Strings["Name"], val);
-					});
+					}).__li.title = Strings["Description"];
 				}
 				
 				var longParams = gui.addFolder('Long Parameters');
@@ -350,7 +350,7 @@
 					options[Longs["Name"]] = Longs["Value"];
 					longParams.add(options, Longs["Name"]).onFinishChange((val) => {
 						SendParameter(Longs["Name"], Math.trunc(val));
-					}).step(1);
+					}).step(1).__li.title = Longs["Description"];
 				}
 				document.getElementById("settingsContainer").appendChild(gui.domElement);
 				gui.close();
