@@ -1,8 +1,12 @@
 #include "DasherController.h"
 
+#include "XmlServerStore.h"
+
+class XmlServerStore;
+
 DasherController::DasherController(Dasher::CSettingsStore* pSettingsStore, std::shared_ptr<WebsocketServer> server, websocketpp::connection_hdl connection): CDashIntfScreenMsgs(pSettingsStore),
-                                                                                                                                                                                    Server(server),
-                                                                                                                                                                                    Connection(connection)
+                                                                                                                                                             Server(server),
+                                                                                                                                                             Connection(connection)
 {
 	ScreenModule = make_shared<ServerScreen>(Server, Connection);
 	ChangeScreen(ScreenModule.get());

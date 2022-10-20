@@ -40,11 +40,7 @@ private:
 public:
 
 private:
-	std::vector<StringToDraw> StringsToDraw;
-	std::vector<RectangleToDraw> RectanglesToDraw;
-	std::vector<CircleToDraw> CirclesToDraw;
-	std::vector<PolylineToDraw> PolylinesToDraw;
-	std::vector<PolygonToDraw> PolygonsToDraw;
+	std::vector<std::unique_ptr<DasherDrawGeometry>> GeometryToDraw;
 
 	std::shared_ptr<WebsocketServer> ServerInstance;
 	websocketpp::connection_hdl Connection;
