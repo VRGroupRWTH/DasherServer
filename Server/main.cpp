@@ -1,5 +1,4 @@
 #include "Declarations.h"
-#include <expat.h>
 #include <iostream>
 #include <chrono>
 #include <thread>

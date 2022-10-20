@@ -30,7 +30,6 @@ ADD_Executable(DasherServer
 	${PROJECT_SOURCE_DIR}/Server/main.cpp
 	${PROJECT_SOURCE_DIR}/Server/DasherController.cpp
 	${PROJECT_SOURCE_DIR}/Server/DasherController.h
-	${PROJECT_SOURCE_DIR}/Server/ParameterDefinitions.h
 	${PROJECT_SOURCE_DIR}/Server/Declarations.h
 	${PROJECT_SOURCE_DIR}/Server/ServerInput.cpp
 	${PROJECT_SOURCE_DIR}/Server/ServerInput.h
