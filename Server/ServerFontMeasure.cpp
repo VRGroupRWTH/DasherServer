@@ -101,7 +101,7 @@ void ServerFontMeasureService::ChangeAlphabet(const Dasher::CAlphInfo* Alphabet)
 	}
 }
 
-std::pair<float, float> ServerFontMeasureService::Measure(std::string Input, const int FontSize)
+std::pair<int, int> ServerFontMeasureService::Measure(std::string Input, const int FontSize)
 {
 	if (Input.length() == 0 || LineHeights.size() == 0) return {0,0};
 
@@ -113,7 +113,7 @@ std::pair<float, float> ServerFontMeasureService::Measure(std::string Input, con
 			if(RestSize.first >= 0 && RestSize.second >= 0)
 			{
 				const int FontSizeIndex = static_cast<int>(std::distance(FontSizes.begin(), std::find(FontSizes.begin(), FontSizes.end(), FontSize)));
-				return { i->Widths[FontSizeIndex] + static_cast<float>(RestSize.first), LineHeights[FontSizeIndex] };
+				return { static_cast<int>(i->Widths[FontSizeIndex] + static_cast<float>(RestSize.first)), static_cast<int>(LineHeights[FontSizeIndex])};
 			}
 		}
 	}

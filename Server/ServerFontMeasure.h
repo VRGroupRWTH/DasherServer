@@ -13,7 +13,7 @@ public:
 	void SendAlphabet(std::shared_ptr<WebsocketServer> Server, websocketpp::connection_hdl Connection);
 	void ParseAlphabetSizes(const rapidjson::Document& Doc);
 	void ChangeAlphabet(const Dasher::CAlphInfo* Alphabet);
-	std::pair<float, float> Measure(std::string Input, const int FontSize);
+	std::pair<int, int> Measure(std::string Input, const int FontSize);
 
 private:
 	typedef struct CharacterInfo
